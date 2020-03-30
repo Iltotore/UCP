@@ -1,0 +1,35 @@
+group 'fr.il_totore'
+version '1.0-SNAPSHOT'
+
+ext {
+    scalaVersion = '2.13.1'
+}
+
+allprojects {
+    apply plugin: 'scala'
+
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        implementation scalaLib()
+        implementation scalaModule('scala-parser-combinators', '1.1.2')
+        implementation scalaModule('scala-collection-contrib', '0.2.1')
+    }
+}
+
+def getMajorScalaVersion() {
+    String[] parts = scalaVersion.tokenize('.')
+    return parts[0] + '.' + parts[1]
+}
+
+def scalaModule(String name, String version) {
+    return 'org.scala-lang.modules' + ':' + name + '_' + getMajorScalaVersion() + ':' + version
+}
+
+def scalaLib(){
+    return 'org.scala-lang:scala-library:' + scalaVersion
+}
