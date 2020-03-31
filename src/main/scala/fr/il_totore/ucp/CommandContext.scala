@@ -1,9 +1,9 @@
 package fr.il_totore.ucp
 
-import scala.collection.MultiDict
+import scala.collection.mutable
 
 
-class CommandContext(args: MultiDict[String, _]) {
+class CommandContext(args: mutable.MultiDict[String, Any]) {
 
   def get[T](key: String): Set[T] = args.get(key).asInstanceOf[Set[T]]
 
@@ -23,5 +23,5 @@ class CommandContext(args: MultiDict[String, _]) {
     get(key).toList(index)
   }
 
-  def putArgument[T](key: String, t: T): Unit = get[T](key)+=t
+  def putArgument(key: String, value: Any): Unit = args.addOne((key, value))
 }
