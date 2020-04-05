@@ -1,5 +1,6 @@
 plugins {
     id 'scala'
+    id 'com.github.maiflai.scalatest' version '0.26'
 }
 
 group 'fr.il_totore'
@@ -18,10 +19,11 @@ repositories {
 
 dependencies {
     implementation scalaLib()
-    implementation scalaModule('scala-parser-combinators', '1.1.2')
     implementation scalaModule('scala-collection-contrib', '0.2.1')
+    testCompile scalaDependency('org.scalatest', 'scalatest', '3.1.1')
 }
 
+compileScala.options.encoding = compileJava.options.encoding = compileTestScala.options.encoding = compileTestJava.options.encoding = 'UTF-8'
 
 def getMajorScalaVersion() {
     String[] parts = scalaVersion.tokenize('.')
@@ -29,9 +31,26 @@ def getMajorScalaVersion() {
 }
 
 def scalaModule(String name, String version) {
-    return 'org.scala-lang.modules' + ':' + name + '_' + getMajorScalaVersion() + ':' + version
+    return scalaDependency('org.scala-lang.modules', name, version)
+}
+
+def scalaDependency(String company, String name, String version) {
+    return company + ':' + name + '_' + getMajorScalaVersion() + ':' + version
 }
 
 def scalaLib() {
     return 'org.scala-lang:scala-library:' + scalaVersion
+}
+
+task spec(dependsOn: ['testClasses'], type: JavaExec) {
+    main = 'org.scalatest.tools.Runner'
+    args = ['-R', 'build/classes/scala/test', '-o']
+    jvmArgs = ['-Dfile.encoding="UTF-8"']
+    classpath = sourceSets.test.runtimeClasspath
+    group 'verification'
+}
+
+test {
+    enabled = false
+    finalizedBy spec
 }

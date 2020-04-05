@@ -19,7 +19,9 @@ abstract class CommandElement[S](key: String, required: Boolean) {
     }
   }
 
-  protected abstract def parseValue(sender: S, arguments: CommandArguments): Object
+  def canParse(sender: S, arguments: CommandArguments): Boolean
 
-  def getUsage(sender: S): String = if(required) "<" + key + ">" else "[" + key + "]"
+  def parseValue(sender: S, arguments: CommandArguments): Object
+
+  def getUsage(sender: S): String = if (required) "<" + key + ">" else "[" + key + "]"
 }

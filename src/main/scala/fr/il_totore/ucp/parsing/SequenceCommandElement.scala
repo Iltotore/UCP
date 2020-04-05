@@ -4,11 +4,15 @@ import fr.il_totore.ucp.CommandContext
 
 class SequenceCommandElement[S](key: String, required: Boolean, elements: List[CommandElement[S]]) extends CommandElement[S](key, required){
 
-  def parse(source: Nothing, args: Nothing, context: CommandContext): Unit = {
+  override def parse(sender: S, args: CommandArguments, context: CommandContext): Unit = {
     for (element <- this.elements) {
-      element.parse(source, args, context)
+      element.parse(sender, args, context)
     }
   }
 
-  override protected def parseValue(sender: S, arguments: CommandArguments): AnyRef = _
+  override def canParse(sender: S, args: CommandArguments): Boolean = {
+    elements.exists(element => !element.canParse(sender, args))
+  }
+
+  override def parseValue(sender: S, arguments: CommandArguments): AnyRef = null
 }
