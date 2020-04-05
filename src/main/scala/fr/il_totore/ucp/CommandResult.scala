@@ -1,9 +1,40 @@
 package fr.il_totore.ucp
 
-import fr.il_totore.ucp.parsing.SingleParameter
+trait CommandResult {
 
-case class CommandResult(resultType: Int, message: Option[String]) {
+  def getResultType: Int
 
-  def this(resultType: Int) = this(resultType, Option.empty)
-  def this(resultType: Int, message: String) = this(resultType, Option(message))
+  def getMessage: Option[String]
+}
+
+
+object CommandResult {
+
+  implicit class ImplicitResult(resultType: Int) extends CommandResult {
+
+    private var message: Option[String] = Option.empty
+
+    def in(message: String): CommandResult = {
+      this.message = Option(message)
+      this
+    }
+
+    def withoutMessage(): CommandResult = {
+      this
+    }
+
+    override def getResultType: Int = resultType
+
+    override def getMessage: Option[String] = message
+  }
+
+  /**
+   * Generic success code
+   */
+  val SUCCESS: Int = 0
+
+  /**
+   * Generic failure code
+   */
+  val FAILURE: Int = -1
 }
