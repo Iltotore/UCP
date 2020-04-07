@@ -15,6 +15,6 @@ class CommandTest extends AnyFlatSpec {
   }
 
   "A CommandResult" should "be consistent" in {
-    val result = SUCCESS in "creating a result"
+    val result = SUCCESS whilst "creating a result"
   }
 }

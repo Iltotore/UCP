@@ -14,7 +14,7 @@ object CommandResult {
 
     private var message: Option[String] = Option.empty
 
-    def in(message: String): CommandResult = {
+    def whilst(message: String): CommandResult = {
       this.message = Option(message)
       this
     }
