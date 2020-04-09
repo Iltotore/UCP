@@ -1,27 +1,54 @@
 package fr.il_totore.ucp.parsing
 
 import fr.il_totore.ucp.CommandContext
+import fr.il_totore.ucp.parsing.ParsingResult._
 
-abstract class CommandElement[S](key: String, required: Boolean) {
+trait CommandElement[S] {
 
-  def getKey: String = key
-  def isOptional: Boolean = required
+  def getKey: String
 
-  def parse(sender: S, arguments: CommandArguments, context: CommandContext): Unit = {
-    val value: Object = parseValue(sender, arguments)
-    val key = getKey
-    if (key != null && value != null) value match {
-      case iterable: Iterable[_] =>
-        for (ent <- iterable) {
-          context.putArgument(key, ent)
-        }
-      case _ => context.putArgument(key, value)
+  def isRequired: Boolean
+
+  def parse(sender: S, arguments: CommandArguments, context: CommandContext[S]): ParsingResult[S]
+
+  def getUsage(sender: S): String
+}
+
+object CommandElement {
+
+  abstract class ImplicitElement[S](key: String) extends CommandElement[S] {
+
+    private var required: Boolean = true
+
+    override def getKey: String = key
+
+    override def isRequired: Boolean = required
+
+    def optional: ImplicitElement[S] = {
+      required = false
+      this
     }
   }
 
-  def canParse(sender: S, arguments: CommandArguments): Boolean
+  abstract class EndElement[S](key: String) extends ImplicitElement[S](key: String) {
 
-  def parseValue(sender: S, arguments: CommandArguments): Object
+    override def getUsage(sender: S): String = if (isRequired) "<" + key + ">" else "[" + key + "]"
+  }
 
-  def getUsage(sender: S): String = if (required) "<" + key + ">" else "[" + key + "]"
+  implicit class LambdaElement[S](key: String) extends EndElement[S](key: String) {
+
+    private var parseFunction: (S, CommandArguments, CommandContext[S]) => Any = _
+
+    override def parse(sender: S, arguments: CommandArguments, context: CommandContext[S]): ParsingResult[S] = {
+      context.putArgument(key, parseFunction.apply(sender, arguments, context))
+      SUCCESS parsing arguments in context
+    }
+
+    def lambda(func: (S, CommandArguments, CommandContext[S]) => Any): LambdaElement[S] = {
+      this.parseFunction = func
+      this
+    }
+  }
+
+
 }

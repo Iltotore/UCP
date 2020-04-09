@@ -18,4 +18,6 @@ class CommandArguments(raw: String, params: List[SingleParameter]) {
     if (!hasNext) return Option.empty
     Option(params(index + 1).getValue)
   }
+
+  def reset(): Unit = index = -1
 }

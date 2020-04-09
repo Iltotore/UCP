@@ -15,4 +15,5 @@ class SimpleSplitTokenizer(separator: String) extends InputTokenizer {
     paramList.toList
   }
 
+  override def getCommandName(text: String): String = text.split(separator)(0)
 }

@@ -8,7 +8,7 @@ trait CommandSpec[S] {
 
   def getElement: CommandElement[S]
 
-  def getExecutor: Option[(S, CommandContext) => CommandResult]
+  def getExecutor: (S, CommandContext[S]) => CommandResult
 
   def getDescription: Option[String]
 
@@ -20,7 +20,7 @@ object CommandSpec {
   implicit class ImplicitSpec[S](name: String) extends CommandSpec[S] {
 
     private var element: CommandElement[S] = _ //TODO make null-safe
-    private var executor: Option[(S, CommandContext) => CommandResult] = Option.empty
+    private var executor: (S, CommandContext[S]) => CommandResult = _
     private var description: Option[String] = Option.empty
     private var permission: S => Boolean = _ => true
     private var tokenizer: InputTokenizer = new SimpleSplitTokenizer(" ")
@@ -30,8 +30,8 @@ object CommandSpec {
       this
     }
 
-    def executing(executor: (S, CommandContext) => CommandResult): ImplicitSpec[S] = {
-      this.executor = Option(executor)
+    def executing(executor: (S, CommandContext[S]) => CommandResult): ImplicitSpec[S] = {
+      this.executor = executor
       this
     }
 
@@ -54,7 +54,7 @@ object CommandSpec {
 
     override def getElement: CommandElement[S] = element
 
-    override def getExecutor: Option[(S, CommandContext) => CommandResult] = executor
+    override def getExecutor: (S, CommandContext[S]) => CommandResult = executor
 
     override def getDescription: Option[String] = description
 

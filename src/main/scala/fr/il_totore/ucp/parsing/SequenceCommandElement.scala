@@ -1,18 +1,21 @@
 package fr.il_totore.ucp.parsing
 
 import fr.il_totore.ucp.CommandContext
+import fr.il_totore.ucp.parsing.ParsingResult._
 
-class SequenceCommandElement[S](key: String, required: Boolean, elements: List[CommandElement[S]]) extends CommandElement[S](key, required){
+class SequenceCommandElement[S](key: String, required: Boolean, elements: List[CommandElement[S]]) extends CommandElement[S] {
 
-  override def parse(sender: S, args: CommandArguments, context: CommandContext): Unit = {
+  override def parse(sender: S, args: CommandArguments, context: CommandContext[S]): ParsingResult[S] = {
     for (element <- this.elements) {
-      element.parse(sender, args, context)
+      val result: ParsingResult[S] = element.parse(sender, args, context)
+      if (result.getResultType != 0) return result
     }
+    SUCCESS parsing args
   }
 
-  override def canParse(sender: S, args: CommandArguments): Boolean = {
-    elements.exists(element => !element.canParse(sender, args))
-  }
+  override def getKey: String = ???
 
-  override def parseValue(sender: S, arguments: CommandArguments): AnyRef = null
+  override def isRequired: Boolean = ???
+
+  override def getUsage(sender: S): String = ???
 }

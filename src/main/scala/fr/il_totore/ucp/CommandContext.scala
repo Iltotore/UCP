@@ -3,14 +3,14 @@ package fr.il_totore.ucp
 import scala.collection.mutable
 
 
-class CommandContext(args: mutable.MultiDict[String, Any]) {
+class CommandContext[S](spec: CommandSpec[S], args: mutable.MultiDict[String, Any]) {
 
-  def get[T](key: String): Set[T] = args.get(key).asInstanceOf[Set[T]]
+  def get[T](key: String): mutable.Set[T] = args.get(key).asInstanceOf[mutable.Set[T]]
 
-  def getFirst[T](key: String): Option[T] = get(key).head
+  def getFirst[T](key: String): Option[T] = Option(get(key).head)
 
   def getLast[T](key: String): Option[T] = {
-    val iterableOpt: Option[Set[T]] = Option(get(key))
+    val iterableOpt: Option[mutable.Set[T]] = Option(get(key))
     if (iterableOpt.isEmpty) return Option.empty
     Option(iterableOpt.get.last)
   }
@@ -24,4 +24,8 @@ class CommandContext(args: mutable.MultiDict[String, Any]) {
   }
 
   def putArgument(key: String, value: Any): Unit = args.addOne((key, value))
+
+  def getSpec: CommandSpec[S] = spec
+
+  def execute(sender: S): CommandResult = spec.getExecutor.apply(sender, this)
 }
