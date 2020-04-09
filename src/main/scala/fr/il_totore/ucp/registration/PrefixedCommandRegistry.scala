@@ -16,6 +16,6 @@ class PrefixedCommandRegistry[S](sequence: ListBuffer[CommandSpec[S]], prefix: S
     if (spec.isEmpty) return FAILURE whilst "matching command"
     val context: CommandContext[S] = new CommandContext(spec.get, mutable.MultiDict.empty)
     val arguments: CommandArguments = new CommandArguments(command, spec.get.getTokenizer.tokenize(stripedCommand))
-    if (spec.get.getElement.isDefined) spec.get.getElement.get.parse(sender, arguments, context) else SUCCESS whilst "parsing empty arguments"
+    if (spec.get.getElement.isDefined) spec.get.getElement.get.parse(sender, arguments, context) else SUCCESS whilst "parsing empty arguments" in context
   }
 }
