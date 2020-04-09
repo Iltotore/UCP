@@ -6,7 +6,7 @@ trait CommandSpec[S] {
 
   def getName: String
 
-  def getElement: CommandElement[S]
+  def getElement: Option[CommandElement[S]]
 
   def getExecutor: (S, CommandContext[S]) => CommandResult
 
@@ -19,14 +19,14 @@ object CommandSpec {
 
   implicit class ImplicitSpec[S](name: String) extends CommandSpec[S] {
 
-    private var element: CommandElement[S] = _ //TODO make null-safe
+    private var element: Option[CommandElement[S]] = Option.empty
     private var executor: (S, CommandContext[S]) => CommandResult = _
     private var description: Option[String] = Option.empty
     private var permission: S => Boolean = _ => true
     private var tokenizer: InputTokenizer = new SimpleSplitTokenizer(" ")
 
     def withElement(commandElement: CommandElement[S]): ImplicitSpec[S] = {
-      element = commandElement
+      element = Option(commandElement)
       this
     }
 
@@ -52,7 +52,7 @@ object CommandSpec {
 
     override def getName: String = name
 
-    override def getElement: CommandElement[S] = element
+    override def getElement: Option[CommandElement[S]] = element
 
     override def getExecutor: (S, CommandContext[S]) => CommandResult = executor
 
