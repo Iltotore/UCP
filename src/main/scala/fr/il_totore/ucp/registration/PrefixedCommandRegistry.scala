@@ -7,7 +7,7 @@ import fr.il_totore.ucp.{CommandContext, CommandSpec}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class PrefixedCommandRegistry[S](sequence: ListBuffer[CommandSpec[S]], prefix: String) extends SequenceCommandRegistry[S](sequence) {
+class PrefixedCommandRegistry[S](sequence: ListBuffer[CommandSpec[S]], prefix: String) extends DynamicCommandRegistry[S](sequence) {
 
   override def parse(sender: S, command: String): ParsingResult[S] = {
     if (!command.startsWith(prefix)) return FAILURE whilst "evaluating prefix"

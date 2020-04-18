@@ -4,7 +4,7 @@ import fr.il_totore.ucp.CommandSpec
 
 import scala.collection.mutable.ListBuffer
 
-abstract class SequenceCommandRegistry[S](sequence: ListBuffer[CommandSpec[S]]) extends CommandRegistry[S] {
+abstract class DynamicCommandRegistry[S](sequence: ListBuffer[CommandSpec[S]]) extends CommandRegistry[S] {
 
   override def register(spec: CommandSpec[S]): Unit = sequence += spec
 
