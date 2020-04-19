@@ -5,7 +5,7 @@ import fr.il_totore.ucp.CommandSpec.ImplicitSpec
 import fr.il_totore.ucp.parsing.CommandElement.SequenceElement
 import fr.il_totore.ucp.parsing.EndElement._
 import fr.il_totore.ucp.parsing.ParsingResult._
-import fr.il_totore.ucp.parsing.{CommandArguments, CommandElement, ParsingResult}
+import fr.il_totore.ucp.parsing.{CommandElement, ParsingResult}
 import fr.il_totore.ucp.registration.{CommandRegistry, PrefixedCommandRegistry}
 import org.scalatest.flatspec.AnyFlatSpec
 
@@ -25,14 +25,8 @@ class CommandTest extends AnyFlatSpec {
     }
 
     val aPermission: String => Boolean = name => name.equals("Il_totore")
-    val firstArg: CommandElement[String] = "boolArg" lambda((sender: String, args: CommandArguments, context: CommandContext[String]) => {
-      context.putArgument("boolArg", args.next.getOrElse("false").toBoolean)
-      SUCCESS.asParsingResult() parsing args
-    })
-    val secondArg: CommandElement[String] = "intArg" lambda((sender: String, args: CommandArguments, context: CommandContext[String]) => {
-      context.putArgument("intArg", args.next.getOrElse("-1").toInt)
-      SUCCESS.asParsingResult() parsing args
-    })
+    val firstArg: CommandElement[String] = "boolArg" casting(_.toBoolean)
+    val secondArg: CommandElement[String] = "intArg" casting(_.toInt)
     "myCommand" describedAs "A test command" withPermission aPermission executing dummyExecutor requiring(firstArg and secondArg)
   }
 

@@ -29,6 +29,10 @@ object ParsingResult {
       this
     }
 
+    def forTooManyArguments: ImplicitParsingResult[S] = whilst("Too many arguments")
+
+    def forNotEnoughArguments: ImplicitParsingResult[S] = whilst("Not enough argument")
+
     def using(arguments: CommandArguments): ImplicitParsingResult[S] = {
       this.arguments = Option(arguments)
       this

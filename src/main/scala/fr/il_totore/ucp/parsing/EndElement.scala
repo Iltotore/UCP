@@ -2,6 +2,9 @@ package fr.il_totore.ucp.parsing
 
 import fr.il_totore.ucp.CommandContext
 import fr.il_totore.ucp.parsing.CommandElement.NamedElement
+import fr.il_totore.ucp.parsing.ParsingResult._
+
+import scala.util.control.Exception.allCatch
 
 abstract class EndElement[S](key: String) extends NamedElement[S](key: String) {
 
@@ -20,6 +23,21 @@ object EndElement {
       this.parseFunction = func
       this
     }
+
+    def casting[T](func: String => T): LambdaElement[S] = {
+
+      def castToValue(sender: S, args: CommandArguments, context: CommandContext[S]): ParsingResult[S] = {
+        val value: Option[T] = allCatch opt {
+          func.apply(args.next.get)
+        }
+        if (value.isEmpty) return FAILURE parsing args in context
+        context.putArgument(key, value.get)
+        SUCCESS parsing args in context
+      }
+
+      lambda(castToValue)
+    }
+
   }
 
 }
