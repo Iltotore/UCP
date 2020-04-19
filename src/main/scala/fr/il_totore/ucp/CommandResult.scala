@@ -14,14 +14,12 @@ object CommandResult {
 
     private var message: Option[String] = Option.empty
 
-    def whilst(message: String): CommandResult = {
+    def whilst(message: String): ImplicitResult = {
       this.message = Option(message)
       this
     }
 
-    def withoutMessage(): CommandResult = {
-      this
-    }
+    def asCommandResult(): ImplicitResult = this
 
     override def getResultType: Int = resultType
 
@@ -34,13 +32,4 @@ object CommandResult {
 
   }
 
-  /**
-   * Generic success code
-   */
-  val SUCCESS: Int = 0
-
-  /**
-   * Generic failure code
-   */
-  val FAILURE: Int = -1
 }

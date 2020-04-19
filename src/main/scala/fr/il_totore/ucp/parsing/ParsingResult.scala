@@ -39,6 +39,8 @@ object ParsingResult {
       this
     }
 
+    def asParsingResult(): ImplicitParsingResult[S] = this
+
     def parsing(arguments: CommandArguments): ImplicitParsingResult[S] = whilst("parsing command").using(arguments)
 
     override def getResultType: Int = resultType
