@@ -26,6 +26,12 @@ object CommandResult {
     override def getResultType: Int = resultType
 
     override def getMessage: Option[String] = message
+
+    override def equals(obj: Any): Boolean = {
+      if (!obj.isInstanceOf[CommandResult]) return false
+      obj.asInstanceOf[CommandResult].getMessage.equals(getMessage) && obj.asInstanceOf[CommandResult].getResultType == getResultType
+    }
+
   }
 
   /**

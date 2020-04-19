@@ -3,11 +3,9 @@ package fr.il_totore.ucp.parsing
 import fr.il_totore.ucp.CommandContext
 import fr.il_totore.ucp.parsing.ParsingResult._
 
+import scala.collection.mutable.ListBuffer
+
 trait CommandElement[S] {
-
-  def getKey: String
-
-  def isRequired: Boolean
 
   def parse(sender: S, arguments: CommandArguments, context: CommandContext[S]): ParsingResult[S]
 
@@ -16,39 +14,43 @@ trait CommandElement[S] {
 
 object CommandElement {
 
-  abstract class ImplicitElement[S](key: String) extends CommandElement[S] {
+  abstract class NamedElement[S](key: String) extends CommandElement[S] {
 
     private var required: Boolean = true
 
-    override def getKey: String = key
+    def getKey: String = key
 
-    override def isRequired: Boolean = required
+    def isRequired: Boolean = required
 
-    def optional: ImplicitElement[S] = {
+    def optional: NamedElement[S] = {
       required = false
       this
     }
+
   }
 
-  abstract class EndElement[S](key: String) extends ImplicitElement[S](key: String) {
 
-    override def getUsage(sender: S): String = if (isRequired) "<" + key + ">" else "[" + key + "]"
-  }
+  implicit class SequenceElement[S](element: CommandElement[S]) extends CommandElement[S] {
 
-  implicit class LambdaElement[S](key: String) extends EndElement[S](key: String) {
+    private val elements: ListBuffer[CommandElement[S]] = ListBuffer()
 
-    private var parseFunction: (S, CommandArguments, CommandContext[S]) => Any = _
+    {
+      elements.addOne(element)
+    }
+
+    def and(element: CommandElement[S]): SequenceElement[S] = {
+      elements.addOne(element)
+      this
+    }
 
     override def parse(sender: S, arguments: CommandArguments, context: CommandContext[S]): ParsingResult[S] = {
-      context.putArgument(key, parseFunction.apply(sender, arguments, context))
+      for (element <- elements) {
+        val result = element.parse(sender, arguments, context)
+        if (result.getResultType != SUCCESS) return result
+      }
       SUCCESS parsing arguments in context
     }
 
-    def lambda(func: (S, CommandArguments, CommandContext[S]) => Any): LambdaElement[S] = {
-      this.parseFunction = func
-      this
-    }
+    override def getUsage(sender: S): String = ""
   }
-
-
 }

@@ -25,7 +25,7 @@ object CommandSpec {
     private var permission: S => Boolean = _ => true
     private var tokenizer: InputTokenizer = new SimpleSplitTokenizer(" ")
 
-    def withElement(commandElement: CommandElement[S]): ImplicitSpec[S] = {
+    def requiring(commandElement: CommandElement[S]): ImplicitSpec[S] = {
       element = Option(commandElement)
       this
     }

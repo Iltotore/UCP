@@ -8,10 +8,12 @@ class SimpleSplitTokenizer(separator: String) extends InputTokenizer {
     val splitString = text.split(separator)
     val paramList = ListBuffer[SingleParameter]()
     var index = 0
-    for (string <- splitString) {
-      paramList+=new SingleParameter(string, index)
-      index+=string.length
+    if (splitString.size == 1) return paramList.toList
+    for (i <- 1 until splitString.length) {
+      paramList += new SingleParameter(splitString(i), index)
+      index += splitString(i).length
     }
+    println(paramList)
     paramList.toList
   }
 
