@@ -44,7 +44,6 @@ class CommandTest extends AnyFlatSpec {
   }
 
 
-  //"A Command" should "be consistent" in commandTest()
   "A CommandRegistry" should "register and parse commands consistently" in {
     var result = executeTest(createRegister(commandTest()), "Il_totore", "/myCommand false")
     assert(result.equals(FAILURE whilst "asserting true"))
