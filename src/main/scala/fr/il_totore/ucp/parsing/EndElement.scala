@@ -13,32 +13,41 @@ abstract class EndElement[S](key: String) extends NamedElement[S](key: String) {
 
 object EndElement {
 
-  implicit class LambdaElement[S](key: String) extends EndElement[S](key: String) {
+  implicit class LambdaElement[S, T](key: String) extends EndElement[S](key: String) {
 
     private var parseFunction: (S, CommandArguments, CommandContext[S]) => ParsingResult[S] = _
+    private var default: Option[T] = Option.empty
 
     override def parse(sender: S, arguments: CommandArguments, context: CommandContext[S]): ParsingResult[S] = parseFunction.apply(sender, arguments, context)
 
-    def lambda(func: (S, CommandArguments, CommandContext[S]) => ParsingResult[S]): LambdaElement[S] = {
+    def lambda(func: (S, CommandArguments, CommandContext[S]) => ParsingResult[S]): LambdaElement[S, T] = {
       this.parseFunction = func
       this
     }
 
-    def casting[T](func: String => T, default: T): LambdaElement[S] = {
+    def casting(func: String => T): LambdaElement[S, T] = {
 
       def castToValue(sender: S, args: CommandArguments, context: CommandContext[S]): ParsingResult[S] = {
         val value: Option[T] = allCatch opt {
           func.apply(args.next.get)
         }
-        if (value.isEmpty && default == null) return FAILURE parsing args in context
-        context.putArgument(key, value.getOrElse(default))
+        if (value.isEmpty && default.isEmpty) return FAILURE parsing args in context
+        context.putArgument(key, value.orElse(default).get)
         SUCCESS parsing args in context
       }
 
       lambda(castToValue)
     }
 
-    def casting[T](func: String => T): LambdaElement[S] = casting(func, null)
+    def orElseOption(default: Option[T]): LambdaElement[S, T] = {
+      this.default = default
+      this
+    }
+
+    def orElse(default: T): LambdaElement[S, T] = {
+      this.default = Option(default)
+      this
+    }
 
   }
 

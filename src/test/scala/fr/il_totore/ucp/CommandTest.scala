@@ -17,12 +17,12 @@ class CommandTest extends AnyFlatSpec {
   def commandTest(): CommandSpec[String] = {
     def dummyExecutor(sender: String, context: CommandContext[String]): CommandResult = {
       if (!context.getFirst[Boolean]("boolArg").getOrElse(false)) return FAILURE.asCommandResult() whilst "asserting true"
-      SUCCESS.asCommandResult() whilst Math.pow(context.getFirst[Int]("intArg").getOrElse(0).toDouble, 2).toString
+      SUCCESS.asCommandResult() whilst Math.pow(context.getFirst[Int]("intArg").get.toDouble, 2).toString
     }
 
     val aPermission: String => Boolean = name => name.equals("Il_totore")
     val firstArg: CommandElement[String] = "boolArg" casting(_.toBoolean)
-    val secondArg: CommandElement[String] = "intArg" casting(_.toInt)
+    val secondArg: CommandElement[String] = "intArg" casting(_.toInt) orElse 0
     "myCommand" describedAs "A test command" withPermission aPermission executing dummyExecutor requiring(firstArg and secondArg)
   }
 
@@ -34,6 +34,7 @@ class CommandTest extends AnyFlatSpec {
 
   def executeTest(registry: CommandRegistry[String], sender: String, cmd: String): CommandResult = {
     val result: ParsingResult[String] = registry.parse(sender, cmd)
+    assert(result.getResultType == SUCCESS)
     assert(result.getContext.isDefined)
     result.getContext.get.execute(sender)
   }
