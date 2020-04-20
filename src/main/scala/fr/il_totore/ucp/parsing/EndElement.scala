@@ -24,19 +24,21 @@ object EndElement {
       this
     }
 
-    def casting[T](func: String => T): LambdaElement[S] = {
+    def casting[T](func: String => T, default: T): LambdaElement[S] = {
 
       def castToValue(sender: S, args: CommandArguments, context: CommandContext[S]): ParsingResult[S] = {
         val value: Option[T] = allCatch opt {
           func.apply(args.next.get)
         }
-        if (value.isEmpty) return FAILURE parsing args in context
-        context.putArgument(key, value.get)
+        if (value.isEmpty && default == null) return FAILURE parsing args in context
+        context.putArgument(key, value.getOrElse(default))
         SUCCESS parsing args in context
       }
 
       lambda(castToValue)
     }
+
+    def casting[T](func: String => T): LambdaElement[S] = casting(func, null)
 
   }
 

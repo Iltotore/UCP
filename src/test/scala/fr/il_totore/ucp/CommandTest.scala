@@ -14,10 +14,6 @@ import scala.collection.mutable.ListBuffer
 class CommandTest extends AnyFlatSpec {
 
 
-  def dummyExecutor(sender: String, context: CommandContext[String]): Unit = {
-
-  }
-
   def commandTest(): CommandSpec[String] = {
     def dummyExecutor(sender: String, context: CommandContext[String]): CommandResult = {
       if (!context.getFirst[Boolean]("boolArg").getOrElse(false)) return FAILURE.asCommandResult() whilst "asserting true"
