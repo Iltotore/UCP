@@ -5,12 +5,12 @@ import scala.collection.mutable
 
 class CommandContext[S](spec: CommandSpec[S], args: mutable.MultiDict[String, Any]) {
 
-  def get[T](key: String): mutable.Set[T] = args.get(key).asInstanceOf[mutable.Set[T]]
+  def get[T](key: String): collection.Set[T] = args.get(key).asInstanceOf[collection.Set[T]]
 
-  def getFirst[T](key: String): Option[T] = Option(get(key).head)
+  def getFirst[T](key: String): Option[T] = args.get(key).headOption.asInstanceOf[Option[T]]
 
   def getLast[T](key: String): Option[T] = {
-    val iterableOpt: Option[mutable.Set[T]] = Option(get(key))
+    val iterableOpt: Option[collection.Set[T]] = Option(get(key))
     if (iterableOpt.isEmpty) return Option.empty
     Option(iterableOpt.get.last)
   }
