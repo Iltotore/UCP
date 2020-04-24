@@ -1,31 +1,26 @@
 package fr.il_totore.ucp.parsing
 
-import fr.il_totore.ucp.CommandContext
+import fr.il_totore.ucp.GeneralResult.ResultType
+import fr.il_totore.ucp.{CommandContext, GeneralResult}
 
-trait ParsingResult[S] {
-
-  def getResultType: Int
-
-  def getMessage: String
+trait ParsingResult[S] extends GeneralResult {
 
   def getArguments: Option[CommandArguments]
 
   def getContext: Option[CommandContext[S]]
+
 }
 
 object ParsingResult {
 
-  val SUCCESS: Int = 0
-  val FAILURE: Int = -1
+  implicit class ImplicitParsingResult[S](resultType: ResultType) extends ParsingResult[S] {
 
-  implicit class ImplicitParsingResult[S](resultType: Int) extends ParsingResult[S] {
-
-    var message: String = ""
+    var message: Option[String] = Option.empty
     var arguments: Option[CommandArguments] = Option.empty
     var context: Option[CommandContext[S]] = Option.empty
 
     def whilst(message: String): ImplicitParsingResult[S] = {
-      this.message = message
+      this.message = Option(message)
       this
     }
 
@@ -47,9 +42,9 @@ object ParsingResult {
 
     def parsing(arguments: CommandArguments): ImplicitParsingResult[S] = whilst("parsing command").using(arguments)
 
-    override def getResultType: Int = resultType
+    override def getResultType: ResultType = resultType
 
-    override def getMessage: String = message
+    override def getMessage: Option[String] = message
 
     override def getArguments: Option[CommandArguments] = arguments
 

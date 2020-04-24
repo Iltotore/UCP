@@ -27,5 +27,5 @@ class CommandContext[S](spec: CommandSpec[S], args: mutable.MultiDict[String, An
 
   def getSpec: CommandSpec[S] = spec
 
-  def execute(sender: S): CommandResult = spec.getExecutor.apply(sender, this)
+  def execute(sender: S): GeneralResult = spec.getExecutor.apply(sender, this)
 }
