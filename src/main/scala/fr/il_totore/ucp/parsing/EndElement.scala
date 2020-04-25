@@ -1,6 +1,7 @@
 package fr.il_totore.ucp.parsing
 
 import fr.il_totore.ucp.CommandContext
+import fr.il_totore.ucp.GeneralResult._
 import fr.il_totore.ucp.parsing.CommandElement.NamedElement
 import fr.il_totore.ucp.parsing.ParsingResult._
 
@@ -35,7 +36,6 @@ object EndElement {
         context.putArgument(key, value.orElse(default).get)
         SUCCESS parsing args in context
       }
-
       lambda(castToValue)
     }
 

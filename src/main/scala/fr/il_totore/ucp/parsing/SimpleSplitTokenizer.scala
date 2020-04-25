@@ -13,7 +13,6 @@ class SimpleSplitTokenizer(separator: String) extends InputTokenizer {
       paramList += new SingleParameter(splitString(i), index)
       index += splitString(i).length
     }
-    println(paramList)
     paramList.toList
   }
 

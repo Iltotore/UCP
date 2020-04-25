@@ -18,16 +18,15 @@ class CommandTest extends AnyFlatSpec {
   def commandTest(): CommandSpec[String] = {
     def dummyExecutor(sender: String, context: CommandContext[String]): GeneralResult = {
       if (!context.getFirst[Boolean]("boolArg").getOrElse(false)) return FAILURE whilst "asserting true"
-      SUCCESS whilst Math.pow(context.getFirst[Int]("intArg").get.toDouble, 2).toString
+      SUCCESS whilst context.getFirst[Int]("time").get.toString
     }
 
     val aPermission: String => Boolean = name => name.equals("Il_totore") //Only for Il_totore <3
     val firstArg: CommandElement[String] = "boolArg" casting(_.toBoolean)
-    val secondArg: CommandElement[String] = "intArg" casting(_.toInt) orElse 0
-    val dayBranch: BranchElement[String] = label("day") of("dayArg" casting(_.toInt))
-    val weekBranch: BranchElement[String] = label("week") of("weekArg" casting(_.toInt * 7))
-    val thirdArg: NodeElement[String] = "unit" choosing dayBranch or weekBranch
-    "myCommand" describedAs "A test command" withPermission aPermission executing dummyExecutor requiring(firstArg and secondArg and thirdArg)
+    val dayBranch: BranchElement[String] = label("day") of("time" casting(_.toInt))
+    val weekBranch: BranchElement[String] = label("week") of("time" casting(_.toInt * 7))
+    val secondArg: NodeElement[String] = "unit" choosing dayBranch or weekBranch
+    "myCommand" describedAs "A test command" withPermission aPermission executing dummyExecutor requiring(firstArg and secondArg)
   }
 
   def createRegister(spec: CommandSpec[String]): CommandRegistry[String] = {
@@ -44,9 +43,11 @@ class CommandTest extends AnyFlatSpec {
 
 
   "A CommandRegistry" should "register and parse commands consistently" in {
-    var result = executeTest(createRegister(commandTest()), "Il_totore", "/myCommand false")
-    assert(result.equals(FAILURE whilst "asserting true"))
-    result = executeTest(createRegister(commandTest()), "Il_totore", "/myCommand true 5")
-    assert(result.equals(SUCCESS whilst "25.0"))
+    val registry: CommandRegistry[String] = createRegister(commandTest())
+    assert(executeTest(registry, "Il_totore", "/myCommand false").equals(FAILURE whilst "asserting true"))
+    assert(
+      executeTest(registry, "Il_totore", "/myCommand true week 1")
+        .equals(executeTest(registry, "Il_totore", "/myCommand true day 7"))
+    )
   }
 }

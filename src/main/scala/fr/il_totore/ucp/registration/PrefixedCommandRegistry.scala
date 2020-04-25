@@ -1,6 +1,7 @@
 package fr.il_totore.ucp.registration
 
-import fr.il_totore.ucp.GeneralResult._
+import fr.il_totore.ucp.GeneralResult.{FAILURE, SUCCESS}
+import fr.il_totore.ucp.parsing.ParsingResult._
 import fr.il_totore.ucp.parsing.{CommandArguments, ParsingResult}
 import fr.il_totore.ucp.{CommandContext, CommandSpec}
 

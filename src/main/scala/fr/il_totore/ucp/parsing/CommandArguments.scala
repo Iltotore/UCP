@@ -2,7 +2,7 @@ package fr.il_totore.ucp.parsing
 
 class CommandArguments(raw: String, params: List[SingleParameter]) {
 
-  var index: Int = -1
+  private var index: Int = -1
 
   def getRawInput: String = raw
 
@@ -19,5 +19,14 @@ class CommandArguments(raw: String, params: List[SingleParameter]) {
     Option(params(index + 1).getValue)
   }
 
-  def reset(): Unit = index = -1
+  def getCurrentIndex: Int = index
+
+  def reset(index: Int): Unit = this.index = index
+
+  def reset(): Unit = reset(-1)
+
+  def back(n: Int): Unit = {
+    index -= n
+    if (index < -1) index = -1
+  }
 }

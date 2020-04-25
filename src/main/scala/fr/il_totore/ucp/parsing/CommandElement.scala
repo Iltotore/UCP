@@ -1,6 +1,7 @@
 package fr.il_totore.ucp.parsing
 
 import fr.il_totore.ucp.CommandContext
+import fr.il_totore.ucp.GeneralResult._
 import fr.il_totore.ucp.parsing.ParsingResult._
 
 import scala.collection.mutable.ListBuffer
