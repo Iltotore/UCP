@@ -31,7 +31,7 @@ publishing {
     publications {
         mavenScala(MavenPublication) {
             groupId = 'io.github.iltotore'
-            artifactId = 'ucp'
+            artifactId = 'ucp' + getMajorScalaVersion()
             version = '0.1'
 
             versionMapping {
