@@ -19,8 +19,6 @@ class NodeElement[S](key: String) extends NamedElement[S](key: String) {
     }
     FAILURE parsing arguments in context
   }
-
-  override def getUsage(sender: S): String = ""
 }
 
 object NodeElement {

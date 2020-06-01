@@ -9,8 +9,6 @@ import scala.collection.mutable.ListBuffer
 trait CommandElement[S] {
 
   def parse(sender: S, arguments: CommandArguments, context: CommandContext[S]): ParsingResult[S]
-
-  def getUsage(sender: S): String
 }
 
 object CommandElement {
@@ -51,7 +49,5 @@ object CommandElement {
       }
       SUCCESS parsing arguments in context
     }
-
-    override def getUsage(sender: S): String = ""
   }
 }

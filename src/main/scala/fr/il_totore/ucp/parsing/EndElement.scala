@@ -7,10 +7,7 @@ import fr.il_totore.ucp.parsing.ParsingResult._
 
 import scala.util.control.Exception.allCatch
 
-abstract class EndElement[S](key: String) extends NamedElement[S](key: String) {
-
-  override def getUsage(sender: S): String = if (isRequired) "<" + key + ">" else "[" + key + "]"
-}
+abstract class EndElement[S](key: String) extends NamedElement[S](key: String)
 
 object EndElement {
 
@@ -36,6 +33,7 @@ object EndElement {
         context.putArgument(key, value.orElse(default).get)
         SUCCESS parsing args in context
       }
+
       lambda(castToValue)
     }
 

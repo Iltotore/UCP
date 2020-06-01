@@ -6,7 +6,7 @@ import fr.il_totore.ucp.parsing.ParsingResult._
 
 abstract class BranchElement[S] extends CommandElement[S] {
 
-  private var child: Option[CommandElement[S]] = Option.empty
+  protected var child: Option[CommandElement[S]] = Option.empty
 
   def isValid(sender: S, arguments: CommandArguments, context: CommandContext[S]): Boolean
 
@@ -19,8 +19,6 @@ abstract class BranchElement[S] extends CommandElement[S] {
 
   override def parse(sender: S, arguments: CommandArguments, context: CommandContext[S]): ParsingResult[S] =
     child.map(element => element.parse(sender, arguments, context)).getOrElse(FAILURE parsing arguments in context)
-
-  override def getUsage(sender: S): String = ""
 
 }
 
@@ -51,6 +49,7 @@ object BranchElement {
       this.stringValidator = stringValidator
       this
     }
+
   }
 
   def label[S](key: String): LabelledBranchElement[S] = new LabelledBranchElement(key)
