@@ -1,4 +1,4 @@
-package fr.il_totore.ucp
+package io.github.il_totore.ucp
 
 import scala.collection.mutable
 

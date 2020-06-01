@@ -1,7 +1,7 @@
-package fr.il_totore.ucp.registration
+package io.github.il_totore.ucp.registration
 
-import fr.il_totore.ucp.CommandSpec
-import fr.il_totore.ucp.parsing.ParsingResult
+import io.github.il_totore.ucp.CommandSpec
+import io.github.il_totore.ucp.parsing.ParsingResult
 
 trait CommandRegistry[S] {
 

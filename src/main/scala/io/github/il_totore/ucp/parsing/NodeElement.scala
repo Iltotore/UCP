@@ -1,9 +1,9 @@
-package fr.il_totore.ucp.parsing
+package io.github.il_totore.ucp.parsing
 
-import fr.il_totore.ucp.CommandContext
-import fr.il_totore.ucp.GeneralResult._
-import fr.il_totore.ucp.parsing.CommandElement.NamedElement
-import fr.il_totore.ucp.parsing.ParsingResult._
+import io.github.il_totore.ucp.CommandContext
+import io.github.il_totore.ucp.GeneralResult._
+import io.github.il_totore.ucp.parsing.CommandElement.NamedElement
+import io.github.il_totore.ucp.parsing.ParsingResult._
 
 import scala.collection.mutable.ListBuffer
 

@@ -1,13 +1,13 @@
-package fr.il_totore.ucp
+package io.github.il_totore.ucp
 
-import fr.il_totore.ucp.CommandSpec.ImplicitSpec
-import fr.il_totore.ucp.GeneralResult._
-import fr.il_totore.ucp.parsing.BranchElement._
-import fr.il_totore.ucp.parsing.CommandElement.SequenceElement
-import fr.il_totore.ucp.parsing.EndElement._
-import fr.il_totore.ucp.parsing.NodeElement._
-import fr.il_totore.ucp.parsing.{BranchElement, CommandElement, NodeElement, ParsingResult}
-import fr.il_totore.ucp.registration.{CommandRegistry, PrefixedCommandRegistry}
+import io.github.il_totore.ucp.CommandSpec.ImplicitSpec
+import io.github.il_totore.ucp.GeneralResult._
+import io.github.il_totore.ucp.parsing.BranchElement._
+import io.github.il_totore.ucp.parsing.CommandElement.SequenceElement
+import io.github.il_totore.ucp.parsing.EndElement._
+import io.github.il_totore.ucp.parsing.NodeElement._
+import io.github.il_totore.ucp.parsing.{BranchElement, CommandElement, NodeElement, ParsingResult}
+import io.github.il_totore.ucp.registration.{CommandRegistry, PrefixedCommandRegistry}
 import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.collection.mutable.ListBuffer

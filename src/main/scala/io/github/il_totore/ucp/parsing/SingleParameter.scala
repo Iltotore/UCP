@@ -1,6 +1,6 @@
-package fr.il_totore.ucp.parsing
+package io.github.il_totore.ucp.parsing
 
-class SingleParameter(value: String, index: Int){
+class SingleParameter(value: String, index: Int) {
 
   def getValue: String = value
 

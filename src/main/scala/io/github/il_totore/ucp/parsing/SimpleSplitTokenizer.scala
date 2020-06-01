@@ -1,4 +1,4 @@
-package fr.il_totore.ucp.parsing
+package io.github.il_totore.ucp.parsing
 
 import scala.collection.mutable.ListBuffer
 

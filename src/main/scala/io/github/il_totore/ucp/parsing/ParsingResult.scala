@@ -1,7 +1,7 @@
-package fr.il_totore.ucp.parsing
+package io.github.il_totore.ucp.parsing
 
-import fr.il_totore.ucp.GeneralResult.ResultType
-import fr.il_totore.ucp.{CommandContext, GeneralResult}
+import io.github.il_totore.ucp.GeneralResult.ResultType
+import io.github.il_totore.ucp.{CommandContext, GeneralResult}
 
 trait ParsingResult[S] extends GeneralResult {
 

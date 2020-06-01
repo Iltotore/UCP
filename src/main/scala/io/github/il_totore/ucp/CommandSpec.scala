@@ -1,6 +1,6 @@
-package fr.il_totore.ucp
+package io.github.il_totore.ucp
 
-import fr.il_totore.ucp.parsing.{CommandElement, InputTokenizer, SimpleSplitTokenizer}
+import io.github.il_totore.ucp.parsing.{CommandElement, InputTokenizer, SimpleSplitTokenizer}
 
 trait CommandSpec[S] {
 

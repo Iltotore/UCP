@@ -1,9 +1,9 @@
-package fr.il_totore.ucp.registration
+package io.github.il_totore.ucp.registration
 
-import fr.il_totore.ucp.GeneralResult.{FAILURE, SUCCESS}
-import fr.il_totore.ucp.parsing.ParsingResult._
-import fr.il_totore.ucp.parsing.{CommandArguments, ParsingResult}
-import fr.il_totore.ucp.{CommandContext, CommandSpec}
+import io.github.il_totore.ucp.GeneralResult.{FAILURE, SUCCESS}
+import io.github.il_totore.ucp.parsing.ParsingResult._
+import io.github.il_totore.ucp.parsing.{CommandArguments, ParsingResult}
+import io.github.il_totore.ucp.{CommandContext, CommandSpec}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
