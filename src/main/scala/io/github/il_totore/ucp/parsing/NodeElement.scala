@@ -7,6 +7,12 @@ import io.github.il_totore.ucp.parsing.ParsingResult._
 
 import scala.collection.mutable.ListBuffer
 
+/**
+ * A NodeElement groups multiple branches.
+ *
+ * @param key the unique key identifying this element.
+ * @tparam S the sender type.
+ */
 class NodeElement[S](key: String) extends NamedElement[S](key: String) {
 
   protected val branches: ListBuffer[BranchElement[S]] = ListBuffer()
@@ -23,13 +29,31 @@ class NodeElement[S](key: String) extends NamedElement[S](key: String) {
 
 object NodeElement {
 
+  /**
+   * An implicit implementation of NodeElement.
+   *
+   * @param key the unique key identifying this element.
+   * @tparam S the sender type.
+   */
   implicit class ImplicitNodeElement[S](key: String) extends NodeElement[S](key) {
 
+    /**
+     * Add the given BranchElement to this node.
+     *
+     * @param element the element to attach.
+     * @return this ImplicitNodeElement for chaining.
+     */
     def choosing(element: BranchElement[S]): ImplicitNodeElement[S] = {
       branches.addOne(element)
       this
     }
 
+    /**
+     * A synonymous of ImplicitNodeElement#choosing, making the command creation syntax clearer.
+     *
+     * @param element the element to attach.
+     * @return this ImplicitNodeElement for chaining.
+     */
     def or(element: BranchElement[S]): ImplicitNodeElement[S] = choosing(element)
   }
 

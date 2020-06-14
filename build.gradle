@@ -1,12 +1,19 @@
 plugins {
     id 'scala'
     id 'maven-publish'
+    id 'signing'
     id 'com.github.maiflai.scalatest' version '0.26'
 }
 
-group 'fr.il_totore'
-version '1.0-SNAPSHOT'
+group 'io.github.iltotore'
+version '1.0'
 
+Properties localProperties = new Properties()
+localProperties.load(rootProject.file('local.properties').newDataInputStream())
+
+for(Map.Entry<String, ?> entry : localProperties.entrySet()){
+    project.ext[entry.getKey()] = entry.getValue()
+}
 
 ext {
     scalaVersion = '2.13.1'
@@ -26,13 +33,15 @@ dependencies {
 
 compileScala.options.encoding = compileJava.options.encoding = compileTestScala.options.encoding = compileTestJava.options.encoding = 'UTF-8'
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 publishing {
     publications {
         mavenScala(MavenPublication) {
-            groupId = 'io.github.iltotore'
-            artifactId = 'ucp' + getMajorScalaVersion()
-            version = '0.1'
+            artifactId = 'ucp_' + getMajorScalaVersion()
 
             versionMapping {
                 usage('java-api') {
@@ -44,9 +53,34 @@ publishing {
                 maven {
                     url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
                     credentials {
-                        username = "Iltotore"
+                        username = "Il_totore"
                         password = System.getenv("SONATYPE_PASSWORD")
                     }
+                }
+            }
+
+            pom {
+                name = 'UniversalCommandParser'
+                description = 'A flexible command system written in Scala.'
+                url = 'https://github.com/Iltotore/UCP'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'iltotore'
+                        name = 'Il_totore'
+                        email = 'rafbodaha@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/Iltotore/UCP.git'
+                    developerConnection = 'scm:git:ssh://github.com/Iltotore/UCP.git'
+                    url = 'https://github.com/Iltotore/UCP.git'
                 }
             }
 
@@ -54,6 +88,12 @@ publishing {
         }
     }
 }
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.mavenScala
+}
+
 
 def getMajorScalaVersion() {
     String[] parts = scalaVersion.tokenize('.')
