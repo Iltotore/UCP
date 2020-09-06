@@ -1,0 +1,100 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+
+allprojects {
+    apply plugin: 'scala'
+    apply from: "${rootProject.rootDir}/scala.gradle"
+
+    group 'io.github.iltotore'
+    version '2.0'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation scalaLib()
+    }
+}
+
+Properties localProperties = new Properties()
+localProperties.load(rootProject.file('local.properties').newDataInputStream())
+
+for(Map.Entry<String, ?> entry : localProperties.entrySet()){
+    project.ext[entry.getKey()] = entry.getValue()
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+javadocJar {
+    from new File(buildDir, 'docs/scaladoc')
+    group 'build'
+    dependsOn scaladoc
+}
+
+scaladoc {
+    source project.sourceSets.main.allScala
+    project.configurations.api.canBeResolved = true
+    scalaClasspath+=project.configurations.api
+}
+
+publishing {
+    publications {
+        mavenScala(MavenPublication) {
+            artifactId = 'ucp_' + getMajorVersion(scalaVersion)
+
+            repositories {
+                maven {
+                    url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+                    credentials {
+                        username = "Il_totore"
+                        password = System.getenv("SONATYPE_PASSWORD")
+                    }
+                }
+            }
+
+            pom {
+                name = 'UniversalCommandParser'
+                description = 'A flexible command system written in Scala'
+                url = 'https://github.com/Iltotore/UCP'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'iltotore'
+                        name = 'Il_totore'
+                        email = 'rafbodaha@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/Iltotore/UCP.git'
+                    developerConnection = 'scm:git:ssh://github.com/Iltotore/UCP.git'
+                    url = 'https://github.com/Iltotore/UCP.git'
+                }
+            }
+
+            from components.java
+        }
+    }
+}
+
+tasks.withType(GenerateModuleMetadata) {
+    enabled = false
+}
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.mavenScala
+}
