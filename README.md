@@ -3,7 +3,7 @@ A flexible command system written in Scala.
 
 # Description
 UCP is a Scala library allowing users to easily register and parse custom commands
-with custom syntax. It uses Scala's implicits as syntactic sugar for command instantiating.
+with custom syntax.
 
 # Add to project
 UCP is published to the [Sonatype Repository](https://oss.sonatype.org/) and indexed by Scaladex.
@@ -31,36 +31,100 @@ libraryDependencies += "io.github.iltotore" %% "ucp" % "version"
 
 # Basic usage
 ## Create registry
-You firstly need to create a new CommandRegistry.
-UCP provides a default prefixed implementation named PrefixedCommandRegistry.
+You firstly need to create a new `CommandRegistry[C, R]` where `C <: CommandContext` is the custom context and `R` a custom result type.
+UCP provides a default prefixed implementation named `CommandRegistry.Prefixed`.
 
 ```scala
-val registry = new CommandRegistry[S](ListBuffer(), "!" /*prefix*/)
+val registry = new CommandRegistry.Prefixed[CommandContext.Mapped, String]("/")
 ```
-Note: `S` is the generic type for the CommandSender. It can represent a String or a more complex class.
 
 ## Declaring command
-UCP provides syntactic sugar for declaring command, based on Scala's implicit classes.
+UCP provides a simple DSL to declare a command.
 ```scala
-val cmd = "myCommand" describedAs "A beautiful command" executing (println(_)) requring (boolArg casting(_.toBoolean))
+registry += Command(
+  name = CommandName("give", "g", "anotherAlias"),
+  executor = GiveExecutor, //An instance of CommandExecutor[C, R]
+  root = GenericParam.Raw("item")
+)
 ```
 
-Now, you can register this newly created CommandElement using `registry.register(cmd)`
+Here is a CommandExecutor example:
+```scala
+object GiveExecutor extends CommandExecutor[CommandContext.Mapped, String] {
+  
+  override def apply(context: CommandContext.Mapped): String = {
+    s"You earned ${context.get[String]("item").get}"
+  }
+}
+```
+
+## Parsing Command
+You can now create your custom commands. Let's parse an incoming String to a Command.
+
+Firstly create an implicit Tokenizer:
+```scala
+implicit val tokenizer: Tokenizer = new Tokenizer.Regex(" ") //All command parts are separated by a space
+```
+
+Now parse the command using CommandRegistry#parseString
+
+```scala
+registry.parseString(new CommandContext.Mapped(mutable.Map.empty), "/give apple") //You earned apple
+```
 
 ## Complex command example
-Here is a command setting the "time" argument to a number of day as int.
+Here is a command "giving" an item with an optional amount to the player
+
+<details>
+<summary>Command declaration</summary>
 
 ```scala
-def dummyExecutor(sender: String, context: CommandContext[String]): GeneralResult = {
-  context.getFirst[Int]("time").foreach(println(_)) //Prints the time if present
-  SUCCESS whilst "calculating time passed" //The returned CommandResult
-}
-
-
-val aPermission: String => Boolean = name => name.equals("Il_totore") //Only for Il_totore <3
-val dayBranch: BranchElement[String] = label("day") of("time" casting(_.toInt)) //The branch is identified by the label "day"
-val weekBranch: BranchElement[String] = label("week") of("time" casting(_.toInt * 7)) //A week = 7 days
-val secondArg: NodeElement[String] = "unit" choosing dayBranch or weekBranch //Choose the branch day or week
-"days" describedAs "A test command" withPermission aPermission executing dummyExecutor requiring secondArg
-//Example: !days week 1 | !days day 7
+registry += Command(
+  name = CommandName("give", "earn"),
+  executor = GiveExecutor,
+  root = new MiscParam.Sequence(
+    GenericParam.Raw("item"),
+    new MiscParam.Optional(GenericParam.Int("amount"))
+  )
+)
 ```
+</details>
+
+<details>
+<summary>GiveExecutor</summary>
+
+```scala
+object GiveExecutor extends CommandExecutor[CommandContext.Mapped, String] {
+  
+  override def apply(context: CommandContext.Mapped): String = {
+    val item: String = context.get("item").get
+    val amount: Int = context.get("amount").getOrElse(1)
+    s"You earned $item x$amount"
+  }
+}
+```
+</details>
+
+<details>
+<summary>Some results</summary>
+
+```
+/give apple
+You earned apple x1
+
+/give apple 2
+You earned apple x2
+
+/give apple --amount 2
+You eanred apple x2
+
+/give --item apple --amount 2
+You earned apple x2
+
+/give --amount 2 --item apple
+You earned apple x2
+
+/give --amount 2
+ParsingException.MissingArgument: item
+```
+</details>
