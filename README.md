@@ -1,8 +1,6 @@
 # UniversalCommandParser
 A flexible command system written in Scala.
 
-**Warning: The project is being reworked and the published artifacts correspond to the old version. You actually need to clone and compile the lib yourself to access new version.**
-
 # Description
 UCP is a Scala library allowing users to easily register and parse custom commands
 with custom syntax.
@@ -46,7 +44,7 @@ UCP provides a simple DSL to declare a command.
 registry += Command(
   name = CommandName("give", "g", "anotherAlias"),
   executor = GiveExecutor, //An instance of CommandExecutor[C, R]
-  root = GenericParam.Raw("item")
+  root = GenericParam.raw("item")
 )
 ```
 
@@ -84,9 +82,9 @@ Here is a command "giving" an item with an optional amount to the player
 registry += Command(
   name = CommandName("give", "earn"),
   executor = GiveExecutor,
-  root = new MiscParam.Sequence(
-    GenericParam.Raw("item"),
-    new MiscParam.Optional(GenericParam.Int("amount"))
+  root = MiscParam.sequence(
+    GenericParam.raw("item"),
+    MiscParam.optional(GenericParam.int("amount"))
   )
 )
 ```
