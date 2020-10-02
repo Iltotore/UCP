@@ -1,6 +1,8 @@
 # UniversalCommandParser
 A flexible command system written in Scala.
 
+**Warning: The project is being reworked and the published artifacts correspond to the old version. You actually need to clone and compile the lib yourself to access new version.**
+
 # Description
 UCP is a Scala library allowing users to easily register and parse custom commands
 with custom syntax.
