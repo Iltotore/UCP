@@ -1,5 +1,4 @@
 plugins {
-    id 'java-library'
     id 'maven-publish'
     id 'signing'
 }
@@ -7,6 +6,7 @@ plugins {
 
 allprojects {
     apply plugin: 'scala'
+    apply plugin: 'java-library'
     apply from: "${rootProject.rootDir}/scala.gradle"
 
     group 'io.github.iltotore'

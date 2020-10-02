@@ -1,0 +1,22 @@
+plugins {
+    id 'fr.il_totore.manadrop' version '0.4.1-SNAPSHOT'
+}
+
+import static fr.il_totore.manadrop.MinecraftDependencyHelper.spigotApi
+import static fr.il_totore.manadrop.MinecraftRepositoryHelper.*
+
+repositories {
+    mavenCentral()
+    spigotSnapshot()
+    sonatype()
+}
+
+dependencies {
+    implementation spigotApi('1.16.2')
+}
+
+spigot {
+    desc {
+        main 'io.github.iltotore.ucp.spigot.Main'
+    }
+}
