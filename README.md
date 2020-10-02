@@ -6,7 +6,7 @@ UCP is a Scala library allowing users to easily register and parse custom comman
 with custom syntax.
 
 # Add to project
-UCP is published to the [Sonatype Repository](https://oss.sonatype.org/) and indexed by Scaladex.
+UCP is published to the [Sonatype Repository](https://oss.sonatype.org/) and indexed by [Scaladex](https://index.scala-lang.org/iltotore/ucp/ucp/).
 <details>
 <summary>Using Gradle</summary>
 
