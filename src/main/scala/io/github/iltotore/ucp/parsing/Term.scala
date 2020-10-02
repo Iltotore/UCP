@@ -1,5 +1,8 @@
 package io.github.iltotore.ucp.parsing
 
+/**
+  * Represent a single command term containing a String value
+  */
 trait Term {
   def value: String
 }

@@ -1,9 +1,11 @@
 package io.github.iltotore.ucp.example
 
-import io.github.iltotore.ucp.parsing.{GenericParam, MiscParam, Tokenizer}
+import io.github.iltotore.ucp.parsing.Tokenizer
+import io.github.iltotore.ucp.parsing.param.{GenericParam, MiscParam}
 import io.github.iltotore.ucp.{Command, CommandContext, CommandName, CommandRegistry}
 
 import scala.collection.mutable
+import scala.concurrent.duration.TimeUnit
 import scala.io.StdIn
 import scala.util.{Failure, Success}
 
@@ -17,9 +19,9 @@ object Main {
     registry += Command(
       name = CommandName("time"),
       executor = CommandTimeExecutor,
-      root = new MiscParam.Sequence(
-        GenericParam.Long("time"),
-        new MiscParam.Optional(new UnitParam("unit"))
+      root = MiscParam.sequence(
+        GenericParam.long("time"),
+        MiscParam.optional(GenericParam.javaEnum[TimeUnit]("unit"))
       )
     )
 
