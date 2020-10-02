@@ -75,7 +75,13 @@ object Param {
 
     override def parse(context: CommandContext, terms: TermGroup): Unit = {
       super.parse(context, terms)
-      context.putArgument(key, parseValue(terms.next(key)))
+      val term = terms.next(key)
+      val value = try parseValue(term) catch {
+        case parsingException: ParsingException => throw parsingException
+
+        case other: Exception => throw ParsingException.InvalidArgument(key, term.value, other)
+      }
+      context.putArgument(key, value)
     }
 
     override def key: String = _key

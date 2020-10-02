@@ -20,7 +20,7 @@ object Main {
       name = CommandName("time"),
       executor = CommandTimeExecutor,
       root = MiscParam.sequence(
-        GenericParam.long("time"),
+        GenericParam.long("amount"),
         MiscParam.optional(GenericParam.javaEnum[TimeUnit]("unit"))
       )
     )
