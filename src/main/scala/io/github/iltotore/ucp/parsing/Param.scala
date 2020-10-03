@@ -1,7 +1,6 @@
-package io.github.iltotore.ucp.parsing.param
+package io.github.iltotore.ucp.parsing
 
 import io.github.iltotore.ucp.CommandContext
-import io.github.iltotore.ucp.parsing.{ParsingException, Term, TermGroup}
 import io.github.iltotore.ucp.util.OptionOps
 
 /**

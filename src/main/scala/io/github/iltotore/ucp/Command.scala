@@ -1,6 +1,6 @@
 package io.github.iltotore.ucp
 
-import io.github.iltotore.ucp.parsing.param.{MiscParam, Param}
+import io.github.iltotore.ucp.parsing.{MiscParam, Param}
 
 
 /**

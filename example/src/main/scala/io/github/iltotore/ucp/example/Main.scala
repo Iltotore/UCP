@@ -1,7 +1,6 @@
 package io.github.iltotore.ucp.example
 
-import io.github.iltotore.ucp.parsing.Tokenizer
-import io.github.iltotore.ucp.parsing.param.{GenericParam, MiscParam}
+import io.github.iltotore.ucp.parsing.{GenericParam, MiscParam, Tokenizer}
 import io.github.iltotore.ucp.{Command, CommandContext, CommandName, CommandRegistry}
 
 import scala.collection.mutable

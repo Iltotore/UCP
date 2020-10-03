@@ -1,8 +1,7 @@
-package io.github.iltotore.ucp.parsing.param
+package io.github.iltotore.ucp.parsing
 
 import io.github.iltotore.ucp.CommandContext
-import io.github.iltotore.ucp.parsing.param.Param.Identifiable
-import io.github.iltotore.ucp.parsing.{ParsingException, Term, TermGroup}
+import io.github.iltotore.ucp.parsing.Param.Identifiable
 import io.github.iltotore.ucp.util.OptionOps
 
 object MiscParam {
@@ -46,14 +45,16 @@ object MiscParam {
 
   /**
    * An optional representation of the given Param.Identifiable.
+   *
    * @param param the parameter to be turned as optional.
    */
   def optional(param: Identifiable): Optional = new Optional(param)
 
   /**
    * Represent a parameter choosing between multiple possibilities
-   * @param key the key used to identify this parameter.
-   * @param seq a Seq[T] containing the multiple possibilities.
+   *
+   * @param key       the key used to identify this parameter.
+   * @param seq       a Seq[T] containing the multiple possibilities.
    * @param equalizer the predicate used to pick the right possibility.
    * @tparam T the output and possibilities type.
    */
@@ -61,6 +62,7 @@ object MiscParam {
 
   /**
    * A MiscParam.Contains implementation choosing between keywords.
+   *
    * @param key the key used to identify this parameter.
    * @param seq a Seq[String] containing the multiple keywords.
    */

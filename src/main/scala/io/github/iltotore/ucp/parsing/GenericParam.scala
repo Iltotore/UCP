@@ -1,6 +1,4 @@
-package io.github.iltotore.ucp.parsing.param
-
-import io.github.iltotore.ucp.parsing.Term
+package io.github.iltotore.ucp.parsing
 
 import scala.reflect.ClassTag
 
