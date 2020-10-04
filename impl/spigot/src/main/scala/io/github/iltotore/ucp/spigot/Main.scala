@@ -2,6 +2,7 @@ package io.github.iltotore.ucp.spigot
 
 import org.bukkit.plugin.java.JavaPlugin
 
-class Main extends JavaPlugin {
-
-}
+/**
+ * Used to load from Bukkit this library
+ */
+class Main extends JavaPlugin

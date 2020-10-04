@@ -5,6 +5,4 @@ import org.bukkit.command.CommandSender
 
 import scala.collection.mutable
 
-class SpigotContext(val sender: CommandSender,
-                    map: mutable.Map[String, Any])
-        extends CommandContext.Mapped(map)
+class SpigotContext(val sender: CommandSender, map: mutable.Map[String, Any]) extends CommandContext.Mapped(map)

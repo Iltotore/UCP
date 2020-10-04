@@ -1,8 +1,32 @@
 package io.github.iltotore.ucp.spigot
 
-import net.md_5.bungee.api.chat.BaseComponent
+import io.github.iltotore.ucp.spigot.SpigotResult.Translations
+import net.md_5.bungee.api.chat.{BaseComponent, TranslatableComponent}
 
-class SpigotResult(valid: Boolean) {
+case class SpigotResult(valid: Boolean,
+                        message: Option[BaseComponent],
+                        affectedBlocks: Option[Int],
+                        affectedEntities: Option[Int],
+                        affectedItems: Option[Int],
+                        successCount: Option[Int]) {
+
+  val translatedMessages: Seq[TranslatableComponent] = {
+    val attrs = Seq(affectedBlocks, affectedEntities, affectedItems, successCount)
+    for(i <- attrs.indices if attrs(i).isDefined) yield new TranslatableComponent(Translations(i), attrs(i))
+  }
+}
+
+object SpigotResult {
+
+  def empty(): SpigotResult = SpigotResult(true, Option.empty, Option.empty, Option.empty, Option.empty, Option.empty)
+
+  def apply(valid: Boolean): SpigotResult.Builder = new Builder(valid)
+
+  implicit def autoBuild(builder: Builder, result: SpigotResult): SpigotResult = builder.build
+
+  val Translations: Seq[String] = Seq.empty
+
+  class Builder(valid: Boolean) {
     private var messageOpt: Option[BaseComponent] = Option.empty
     private var affectedBlocksOpt: Option[Int] = Option.empty
     private var affectedEntitiesOpt: Option[Int] = Option.empty
@@ -28,29 +52,7 @@ class SpigotResult(valid: Boolean) {
     def successCount: Option[Int] = successCountOpt
 
     def successCount_=(value: Int): Unit = successCountOpt = Option(value)
-}
 
-object SpigotResult {
-    def affectedBlocks(count: Int): SpigotResult =
-        new SpigotResult(true) {
-            affectedBlocks = count
-        }
-
-    def affectedEntities(count: Int): SpigotResult =
-        new SpigotResult(true) {
-            affectedEntities = count
-        }
-
-    def affectedItems(count: Int): SpigotResult =
-        new SpigotResult(true) {
-            affectedItems = count
-        }
-    
-    def empty(): SpigotResult =
-        new SpigotResult(true)
-
-    def apply(valid: Boolean): SpigotResult =
-        new SpigotResult(valid)
-
-
+    def build: SpigotResult = SpigotResult(valid, message, affectedBlocks, affectedEntities, affectedItems, successCount)
+  }
 }
